@@ -1,313 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>IPTV Player Dashboard</title>
-    <meta name="viewport" content="width=1300">
-    <style>
-        html, body {
-            height: 100%; width: 100%;
-            margin: 0; padding: 0;
-            background: linear-gradient(120deg, #232526, #414345 100%);
-            font-family: 'Segoe UI', sans-serif;
-        }
-        body {
-            height: 100vh; min-height: 100vh; width: 100vw; min-width: 100vw;
-            display: flex; align-items: stretch; justify-content: center;
-        }
-        .sidebar {
-            width: 320px;
-            background: #18191a;
-            border-right: 2.5px solid #232526;
-            display: flex; flex-direction: column;
-            min-height: 100vh; max-height: 100vh;
-            padding: 0;
-            box-shadow: 4px 0 24px #0005;
-        }
-        .sidebar h1 {
-            color: #56cc9d;
-            text-align: center;
-            font-size: 1.24rem;
-            letter-spacing: 1px;
-            margin: 32px 0 18px 0;
-        }
-        .canal-list {
-            flex: 1 1 0;
-            overflow-y: auto;
-            padding: 0 8px 16px 8px;
-            margin: 0;
-        }
-        .canal-btn {
-            width: 100%; display: flex; align-items: center;
-            background: #232526; border: none; border-radius: 10px;
-            margin-bottom: 9px; padding: 8px 14px; cursor: pointer;
-            transition: background .13s, box-shadow .13s;
-            color: #eafff8; font-size: 1.08rem; font-family: inherit;
-            gap: 13px;
-        }
-        .canal-btn.selected, .canal-btn:hover {
-            background: #56cc9d;
-            color: #18191a;
-            box-shadow: 0 2px 12px #33c98a45;
-        }
-        .canal-logo {
-            width: 38px; height: 38px; border-radius: 7px;
-            background: #fff;
-            object-fit: contain;
-            border: 2px solid #b2ffe8;
-        }
-        .canal-info {
-            display: flex; flex-direction: column; align-items: flex-start;
-            min-width: 0;
-        }
-        .canal-name {
-            font-weight: 500; font-size: 1.06rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; max-width: 180px;
-        }
-        .canal-group {
-            color: #7ee7c7;
-            font-size: 0.89rem;
-            margin-left: 1px;
-            opacity: .82;
-            margin-top: 2px;
-            max-width: 178px;
-            white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
-        }
-        .main-content {
-            flex: 1 1 0;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 100vh;
-            padding: 0 0 0 0;
-            background: none;
-        }
-        .player-box {
-            width: 820px; max-width: 100vw;
-            background: #202223e2;
-            border-radius: 22px;
-            box-shadow: 0 12px 40px #2228;
-            padding: 30px 38px 26px 38px;
-            margin: 55px 0 18px 0;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        video {
-            width: 700px; max-width: 96vw;
-            height: 420px; max-height: 68vh;
-            background: #222;
-            border-radius: 18px;
-            margin-bottom: 18px;
-            outline: none;
-            box-shadow: 0 4px 22px #1a2b2499;
-        }
-        .controls {
-            display: flex; align-items: center; gap: 17px;
-            width: 100%; justify-content: center; margin-bottom: 8px;
-        }
-        #volume {
-            width: 140px; accent-color: #56cc9d;
-        }
-        label {
-            color: #d3fff0;
-            font-size: 1.09rem;
-        }
-        .bygepa {
-            margin-top: 16px;
-            color: #6fe2b1;
-            font-size: 0.98rem;
-            letter-spacing: 1px;
-            opacity: 0.65;
-            text-align: center;
-        }
-        .canal-list::-webkit-scrollbar { width: 7px; background: #232526;}
-        .canal-list::-webkit-scrollbar-thumb { background: #212723; border-radius: 8px;}
-        @media (max-width: 900px) {
-            .player-box { width: 98vw; padding: 8vw 0 8vw 0; }
-            video { width: 94vw; height: 34vw;}
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title></title> <!-- sem título visível -->
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-<div class="sidebar">
-    <h1>IPTV Player<br>Felipe</h1>
-    <div class="canal-list" id="canal-list"></div>
-    <div class="bygepa">Cole seus canais entre os marcadores<br>no código (padrão M3U)</div>
-</div>
-<div class="main-content">
-    <div class="player-box">
-        <video id="video" controls autoplay style="display:none"></video>
-        <div class="controls" style="display:none">
-            <label for="volume">🔊</label>
-            <input type="range" id="volume" min="0" max="1" step="0.01">
-        </div>
-    </div>
-</div>
-<script>
-// ====== AQUI INICIA A LISTA DE CANAIS ======
-const canaisM3U = `
-#EXTINF:-1 tvg-id="sportv.br" tvg-name="SporTV FHD" tvg-logo="https://i.imgur.com/G9nCuZT.png" group-title="Canais | SporTV",SporTV FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38419.m3u8
+  <!-- Botão de menu (hambúrguer) -->
+  <button id="menuBtn" class="hamburger" aria-label="Abrir lista de canais" aria-controls="channelDrawer" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 
-#EXTINF:-1 tvg-id="sportv2.br" tvg-name="SporTV 2 FHD" tvg-logo="https://i.imgur.com/wINVzUp.png" group-title="Canais | SporTV",SporTV 2 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38395.m3u8
+  <!-- Drawer de canais -->
+  <aside id="channelDrawer" class="drawer" aria-hidden="true">
+    <header class="drawer-header">
+      <strong>Canais</strong>
+      <button id="closeDrawer" class="close">×</button>
+    </header>
+    <nav id="channelList" class="channel-list" role="listbox" aria-label="Lista de canais">
+      <!-- itens inseridos via JS -->
+    </nav>
+  </aside>
 
-#EXTINF:-1 tvg-id="sportv3.br" tvg-name="SporTV 3 FHD" tvg-logo="https://i.imgur.com/Srf3e8w.png" group-title="Canais | SporTV",SporTV 3 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38394.m3u8
+  <!-- backdrop para fechar ao tocar fora -->
+  <div id="backdrop" class="backdrop" hidden></div>
 
-#EXTINF:-1 tvg-id="SporTV 4 HD" tvg-name="SporTV 4 HD" tvg-logo="https://i.imgur.com/SMrn7Gf.png" group-title="Canais | SporTV",SporTV 4 HD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/127664.m3u8
+  <!-- player -->
+  <main class="player-wrap">
+    <video id="video" class="player" playsinline controls></video>
+  </main>
 
-#EXTINF:-1 tvg-id="premiere.fc.br" tvg-name="Mosaico Premiere FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Mosaico Premiere FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/74668.m3u8
-
-#EXTINF:-1 tvg-id="premiere.2.br" tvg-name="Premiere 2 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 2 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38410.m3u8
-
-#EXTINF:-1 tvg-id="premiere.3.br" tvg-name="Premiere 3 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 3 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38409.m3u8
-
-#EXTINF:-1 tvg-id="premiere.4.br" tvg-name="Premiere 4 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 4 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38408.m3u8
-
-#EXTINF:-1 tvg-id="premiere.5.br" tvg-name="Premiere 5 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 5 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38407.m3u8
-
-#EXTINF:-1 tvg-id="premiere.6.br" tvg-name="Premiere 6 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 6 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38406.m3u8
-
-#EXTINF:-1 tvg-id="premiere.7.br" tvg-name="Premiere 7 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 7 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38405.m3u8
-
-#EXTINF:-1 tvg-id="Premiere 8 FHD" tvg-name="Premiere 8 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 8 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/931355.m3u8
-
-#EXTINF:-1 tvg-id="bandsports.br" tvg-name="BandSports FHD" tvg-logo="https://i.imgur.com/EjpU9TY.png" group-title="Canais | Esportes",BandSports FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/42900.m3u8
-
-#EXTINF:-1 tvg-id="espn.br" tvg-name="ESPN FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38413.m3u8
-
-#EXTINF:-1 tvg-id="a.e.br" tvg-name="ESPN 2 FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN 2 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38401.m3u8
-
-#EXTINF:-1 tvg-id="a.e.br" tvg-name="ESPN 3 FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN 3 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/41477.m3u8
-
-#EXTINF:-1 tvg-id="a.e.br" tvg-name="ESPN 4 FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN 4 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/63306.m3u8
-
-#EXTINF:-1 tvg-id="fox.sports.2.br" tvg-name="ESPN 5 FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN 5 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38398.m3u8
-
-#EXTINF:-1 tvg-id="ESPN Extra FHD" tvg-name="ESPN 6 FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN 6 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/129624.m3u8
-
-
-# Cole novos canais aqui...
-`;
-// ====== AQUI FINALIZA A LISTA DE CANAIS ======
-
-// Não altere nada abaixo!
-function parseM3U(m3uText) {
-    const lines = m3uText.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-    const canais = [];
-    let lastInfo = null;
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        if (line.startsWith("#EXTINF:")) {
-            lastInfo = line;
-        } else if (lastInfo && !line.startsWith("#")) {
-            // Extrai info
-            const logoMatch = lastInfo.match(/tvg-logo="([^"]+)"/i);
-            const groupMatch = lastInfo.match(/group-title="([^"]+)"/i);
-            const nameMatch = lastInfo.match(/tvg-name="([^"]+)"/i);
-            const titleMatch = lastInfo.match(/,(.*)$/);
-            canais.push({
-                name: (nameMatch && nameMatch[1]) || (titleMatch && titleMatch[1]) || "Canal",
-                logo: (logoMatch && logoMatch[1]) || "",
-                group: (groupMatch && groupMatch[1]) || "Outros",
-                url: line
-            });
-            lastInfo = null;
-        }
-    }
-    return canais;
-}
-
-const canais = parseM3U(canaisM3U);
-
-function agrupaPorGrupo(lista) {
-    const grupos = {};
-    lista.forEach(c => {
-        if (!grupos[c.group]) grupos[c.group] = [];
-        grupos[c.group].push(c);
-    });
-    return grupos;
-}
-
-const video = document.getElementById('video');
-const volume = document.getElementById('volume');
-const canalList = document.getElementById('canal-list');
-const controls = document.querySelector('.controls');
-
-let hls = null;
-let idxAtual = 0;
-
-function renderCanais(idxSel = 0) {
-    const grupos = agrupaPorGrupo(canais);
-    canalList.innerHTML = "";
-    Object.entries(grupos).forEach(([group, list]) => {
-        let groupLabel = document.createElement("div");
-        groupLabel.textContent = group;
-        groupLabel.className = "canal-group";
-        canalList.appendChild(groupLabel);
-
-        list.forEach((c, i) => {
-            let idx = canais.indexOf(c);
-            let btn = document.createElement("button");
-            btn.className = "canal-btn" + (idxSel === idx ? " selected" : "");
-            btn.innerHTML = `<img class="canal-logo" src="${c.logo}"> <div class="canal-info"><div class="canal-name">${c.name}</div><div class="canal-group">${c.group}</div></div>`;
-            btn.onclick = () => playChannel(idx);
-            canalList.appendChild(btn);
-        });
-    });
-}
-
-function playChannel(idx) {
-    if (!canais[idx]) return;
-    idxAtual = idx;
-    if (hls) { hls.destroy(); hls = null; }
-    if (Hls.isSupported()) {
-        hls = new Hls();
-        hls.loadSource(canais[idx].url);
-        hls.attachMedia(video);
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = canais[idx].url;
-        video.load();
-    } else {
-        alert("Seu navegador não suporta streaming HLS/m3u8!");
-    }
-    localStorage.setItem('gepa_last_chan', idx);
-    renderCanais(idx);
-    video.style.display = "";
-    controls.style.display = "";
-}
-
-// Volume com cache
-let lastVolume = localStorage.getItem('gepa_vol');
-if (lastVolume !== null) {
-    video.volume = volume.value = parseFloat(lastVolume);
-} else {
-    video.volume = volume.value = 0.7;
-}
-volume.oninput = e => {
-    video.volume = e.target.value;
-    localStorage.setItem('gepa_vol', video.volume);
-};
-
-let last = localStorage.getItem('gepa_last_chan');
-let idx = last ? parseInt(last) : 0;
-renderCanais(idx);
-playChannel(idx);
-
-</script>
+  <!-- hls.js (para .m3u8 em navegadores sem HLS nativo) -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
+  <script src="./app.js" defer></script>
 </body>
 </html>
