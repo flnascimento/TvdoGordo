@@ -1,0 +1,135 @@
+[
+  {
+    "id": "sportv1",
+    "name": "SporTV FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38419.m3u8",
+    "logo": "https://i.imgur.com/G9nCuZT.png",
+    "group": "Canais | SporTV"
+  },
+  {
+    "id": "sportv2",
+    "name": "SporTV 2 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38395.m3u8",
+    "logo": "https://i.imgur.com/wINVzUp.png",
+    "group": "Canais | SporTV"
+  },
+  {
+    "id": "sportv3",
+    "name": "SporTV 3 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38394.m3u8",
+    "logo": "https://i.imgur.com/Srf3e8w.png",
+    "group": "Canais | SporTV"
+  },
+  {
+    "id": "sportv4",
+    "name": "SporTV 4 HD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/127664.m3u8",
+    "logo": "https://i.imgur.com/SMrn7Gf.png",
+    "group": "Canais | SporTV"
+  },
+  {
+    "id": "premiere-mosaico",
+    "name": "Mosaico Premiere FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/74668.m3u8",
+    "logo": "https://i.imgur.com/0hDut9Q.png",
+    "group": "Canais | Premiere"
+  },
+  {
+    "id": "premiere2",
+    "name": "Premiere 2 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38410.m3u8",
+    "logo": "https://i.imgur.com/0hDut9Q.png",
+    "group": "Canais | Premiere"
+  },
+  {
+    "id": "premiere3",
+    "name": "Premiere 3 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38409.m3u8",
+    "logo": "https://i.imgur.com/0hDut9Q.png",
+    "group": "Canais | Premiere"
+  },
+  {
+    "id": "premiere4",
+    "name": "Premiere 4 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38408.m3u8",
+    "logo": "https://i.imgur.com/0hDut9Q.png",
+    "group": "Canais | Premiere"
+  },
+  {
+    "id": "premiere5",
+    "name": "Premiere 5 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38407.m3u8",
+    "logo": "https://i.imgur.com/0hDut9Q.png",
+    "group": "Canais | Premiere"
+  },
+  {
+    "id": "premiere6",
+    "name": "Premiere 6 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38406.m3u8",
+    "logo": "https://i.imgur.com/0hDut9Q.png",
+    "group": "Canais | Premiere"
+  },
+  {
+    "id": "premiere7",
+    "name": "Premiere 7 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38405.m3u8",
+    "logo": "https://i.imgur.com/0hDut9Q.png",
+    "group": "Canais | Premiere"
+  },
+  {
+    "id": "premiere8",
+    "name": "Premiere 8 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/931355.m3u8",
+    "logo": "https://i.imgur.com/0hDut9Q.png",
+    "group": "Canais | Premiere"
+  },
+  {
+    "id": "bandsports",
+    "name": "BandSports FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/42900.m3u8",
+    "logo": "https://i.imgur.com/EjpU9TY.png",
+    "group": "Canais | Esportes"
+  },
+  {
+    "id": "espn1",
+    "name": "ESPN FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38413.m3u8",
+    "logo": "https://i.imgur.com/yOgmmCy.png",
+    "group": "Canais | ESPN"
+  },
+  {
+    "id": "espn2",
+    "name": "ESPN 2 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38401.m3u8",
+    "logo": "https://i.imgur.com/yOgmmCy.png",
+    "group": "Canais | ESPN"
+  },
+  {
+    "id": "espn3",
+    "name": "ESPN 3 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/41477.m3u8",
+    "logo": "https://i.imgur.com/yOgmmCy.png",
+    "group": "Canais | ESPN"
+  },
+  {
+    "id": "espn4",
+    "name": "ESPN 4 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/63306.m3u8",
+    "logo": "https://i.imgur.com/yOgmmCy.png",
+    "group": "Canais | ESPN"
+  },
+  {
+    "id": "espn5",
+    "name": "ESPN 5 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38398.m3u8",
+    "logo": "https://i.imgur.com/yOgmmCy.png",
+    "group": "Canais | ESPN"
+  },
+  {
+    "id": "espn6",
+    "name": "ESPN 6 FHD",
+    "url": "http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/129624.m3u8",
+    "logo": "https://i.imgur.com/yOgmmCy.png",
+    "group": "Canais | ESPN"
+  }
+]

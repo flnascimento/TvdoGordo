@@ -1,366 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>IPTV Player • Mobile</title>
-  <!-- Mobile-first viewport + notch support -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#111418" />
-  <style>
-    :root{
-      --bg: #0f1115; /* app background */
-      --panel: #161a20ee; /* glass panel */
-      --muted: #8aa0b3; /* secondary text */
-      --txt: #e8f1f8; /* primary text */
-      --brand: #56cc9d; /* accent */
-      --brand-2: #2ea87f; /* accent darker */
-      --chip: #1b2028; /* list chip */
-      --shadow: 0 10px 30px rgba(0,0,0,.42);
-      --radius-xl: 18px; --radius-lg: 14px; --radius: 12px; --radius-sm: 10px;
-      --tap: 52px; /* min touch target */
-    }
-    @media (prefers-color-scheme: light){
-      :root{ --bg:#f4f7fb; --panel:#ffffffcc; --txt:#0c1116; --muted:#44515e; --chip:#e9eef4; --shadow:0 10px 30px rgba(0,0,0,.12); }
-    }
-    html,body{height:100%;margin:0}
-    body{
-      background: radial-gradient(1200px 600px at 50% -10%, #1a222a 0%, var(--bg) 50%);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial, sans-serif;
-      color: var(--txt);
-      display:flex; flex-direction:column; min-height:100svh;
-    }
-    /* Header */
-    .appbar{
-      position:sticky; top:0; z-index:20;
-      display:flex; align-items:center; gap:10px;
-      padding:12px max(12px, env(safe-area-inset-left)) 12px max(12px, env(safe-area-inset-right));
-      background: linear-gradient(180deg, rgba(10,12,15,.9), rgba(10,12,15,.55) 60%, rgba(10,12,15,0));
-      backdrop-filter: blur(8px);
-    }
-    .menu-btn{ height:42px; width:42px; border-radius:12px; border:0; background:var(--chip); color:var(--txt); display:grid; place-items:center; box-shadow:var(--shadow); }
-    .menu-btn:active{ transform:scale(.98); }
-    .title{
-      font-weight:700; letter-spacing:.2px; font-size:1.05rem; line-height:1.1;
-      display:flex; flex-direction:column;
-    }
-    .title small{ font-weight:500; color:var(--muted); }
-    .search{ margin-left:auto; display:flex; align-items:center; gap:8px; }
-    .search input{ height:42px; min-width:min(48vw,360px); padding:0 14px 0 40px; border-radius:12px; border:1px solid #2a313a; background:var(--chip); color:var(--txt); outline:none; }
-    .search .icon{ position:relative; left:34px; pointer-events:none; color:#89a9be; font-size:18px; }
-
-    /* Main */
-    .main{ flex:1; display:grid; grid-template-rows: auto 1fr auto;}
-
-    /* Player Card */
-    .player-card{
-      margin:10px auto 12px; width:min(100%, 920px);
-      padding:12px; border-radius:var(--radius-xl);
-      background: var(--panel); box-shadow: var(--shadow);
-    }
-    .video-wrap{ position:relative; border-radius:16px; overflow:hidden; background:#0a0d10; }
-    video{ width:100%; aspect-ratio:16/9; background:#000; display:block; }
-    .label-current{ position:absolute; left:10px; top:10px; background:#0a0f14c0; color:#bfeede; padding:6px 10px; border-radius:999px; font-size:.85rem; }
-
-    .controls{ display:flex; gap:10px; align-items:center; justify-content:space-between; padding:10px 4px 0; flex-wrap:wrap; }
-    .btn{ min-height:var(--tap); padding:0 14px; border-radius:12px; border:0; display:inline-flex; align-items:center; gap:8px; font-weight:600; background:#1c222a; color:var(--txt); }
-    .btn:active{ transform:translateY(1px); }
-    .btn.primary{ background: linear-gradient(180deg, var(--brand), var(--brand-2)); color:#0d1416; }
-    .btn.ghost{ background: transparent; border:1px solid #2a333d; }
-    .vol{ display:flex; align-items:center; gap:10px; min-width:200px;}
-    .vol input{ width:180px; accent-color: var(--brand); }
-
-    /* Drawer (channel list) */
-    .drawer{ position:fixed; inset:auto 0 0 0; translate:0 100%; transition:translate .24s ease; z-index:30; background: linear-gradient(180deg, #0e1216, #0b0f13); border-top-left-radius:18px; border-top-right-radius:18px; box-shadow: 0 -30px 60px #0008; max-height:75svh; display:flex; flex-direction:column; }
-    .drawer.open{ translate:0 0; }
-    .drawer-handle{ width:44px; height:5px; border-radius:999px; background:#2c333d; margin:10px auto; }
-    .drawer-head{ display:flex; align-items:center; gap:10px; padding:0 16px 10px; }
-    .drawer-head h2{ margin:0; font-size:1.05rem; }
-    .groups{ overflow:auto; padding:6px 10px 14px; }
-    details.group{ background:transparent; border-radius:12px; margin:6px 0; }
-    details>summary{ cursor:pointer; list-style:none; user-select:none; display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:12px; background:#141920; border:1px solid #232b35; }
-    details[open]>summary{ background:#19202a; }
-    .group-title{ font-weight:700; color:#a5f0d8; }
-    .canal-list{ display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:10px 4px 2px; }
-    .canal-btn{ display:flex; align-items:center; gap:10px; padding:10px; background:#12171d; border:1px solid #202833; border-radius:12px; color:var(--txt); min-height:56px; }
-    .canal-btn.selected{ outline:2px solid var(--brand); background:#0f1813; }
-    .logo{ width:36px; height:36px; border-radius:8px; background:#fff; object-fit:contain; border:2px solid #b2ffe8; }
-    .name{ font-weight:700; font-size:.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .sub{ color:#7ee7c7; font-size:.8rem; opacity:.85; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-    /* Desktop / tablets: drawer becomes sidebar */
-    @media (min-width: 920px){
-      body{ flex-direction:row; }
-      .appbar{ position:sticky; top:0; grid-column:span 2; }
-      .drawer{ position:sticky; translate:0 0; inset:0; max-height:unset; height:100svh; width:340px; border-radius:0; box-shadow:none; border-right:1px solid #1a2129; }
-      .drawer-handle{ display:none; }
-      .groups{ padding:10px; }
-      .canal-list{ grid-template-columns: 1fr; }
-      .main{ flex:1; padding:12px 18px; }
-      .player-card{ margin:22px auto; padding:16px; }
-    }
-
-    /* Bottom safe-area padding */
-    .drawer::after{ content:""; display:block; height: max(8px, env(safe-area-inset-bottom)); }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title></title> <!-- sem título visível -->
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <!-- Top bar -->
-  <header class="appbar">
-    <button id="toggleDrawer" class="menu-btn" aria-label="Abrir lista de canais" title="Canais">
-      <!-- burger -->
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
-    <div class="title">
-      <span>IPTV Player</span>
-      <small>Layout otimizado para celular</small>
-    </div>
-    <div class="search">
-      <span class="icon">🔎</span>
-      <input id="q" type="search" placeholder="Buscar canal ou grupo…" autocomplete="off"/>
-    </div>
-  </header>
+  <!-- Botão de menu (hambúrguer) -->
+  <button id="menuBtn" class="hamburger" aria-label="Abrir lista de canais" aria-controls="channelDrawer" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 
-  <main class="main">
-    <section class="player-card">
-      <div class="video-wrap">
-        <span id="labelCurrent" class="label-current" hidden>Canal atual</span>
-        <video id="video" playsinline controls webkit-playsinline disablepictureinpicture></video>
-      </div>
-      <div class="controls">
-        <div class="vol">
-          <span>🔊</span>
-          <input id="volume" type="range" min="0" max="1" step="0.01" />
-        </div>
-        <div style="display:flex; gap:8px; margin-left:auto;">
-          <button id="btnFs" class="btn">Tela cheia</button>
-          <button id="btnReload" class="btn ghost">Recarregar</button>
-          <button id="btnOpenDrawer" class="btn primary">Canais</button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Drawer / Sidebar -->
-  <aside id="drawer" class="drawer" aria-hidden="true">
-    <div class="drawer-handle"></div>
-    <div class="drawer-head">
-      <h2>Canais</h2>
-      <div style="margin-left:auto; color:var(--muted); font-size:.9rem;" id="count"></div>
-    </div>
-    <div id="groups" class="groups"></div>
+  <!-- Drawer de canais -->
+  <aside id="channelDrawer" class="drawer" aria-hidden="true">
+    <header class="drawer-header">
+      <strong>Canais</strong>
+      <button id="closeDrawer" class="close">×</button>
+    </header>
+    <nav id="channelList" class="channel-list" role="listbox" aria-label="Lista de canais">
+      <!-- itens inseridos via JS -->
+    </nav>
   </aside>
 
-<script>
-// ====== LISTA DE CANAIS (M3U) ======
-const canaisM3U = `
-#EXTINF:-1 tvg-id="sportv.br" tvg-name="SporTV FHD" tvg-logo="https://i.imgur.com/G9nCuZT.png" group-title="Canais | SporTV",SporTV FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38419.m3u8
+  <!-- backdrop para fechar ao tocar fora -->
+  <div id="backdrop" class="backdrop" hidden></div>
 
-#EXTINF:-1 tvg-id="sportv2.br" tvg-name="SporTV 2 FHD" tvg-logo="https://i.imgur.com/wINVzUp.png" group-title="Canais | SporTV",SporTV 2 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38395.m3u8
+  <!-- player -->
+  <main class="player-wrap">
+    <video id="video" class="player" playsinline controls></video>
+  </main>
 
-#EXTINF:-1 tvg-id="sportv3.br" tvg-name="SporTV 3 FHD" tvg-logo="https://i.imgur.com/Srf3e8w.png" group-title="Canais | SporTV",SporTV 3 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38394.m3u8
-
-#EXTINF:-1 tvg-id="SporTV 4 HD" tvg-name="SporTV 4 HD" tvg-logo="https://i.imgur.com/SMrn7Gf.png" group-title="Canais | SporTV",SporTV 4 HD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/127664.m3u8
-
-#EXTINF:-1 tvg-id="premiere.fc.br" tvg-name="Mosaico Premiere FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Mosaico Premiere FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/74668.m3u8
-
-#EXTINF:-1 tvg-id="premiere.2.br" tvg-name="Premiere 2 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 2 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38410.m3u8
-
-#EXTINF:-1 tvg-id="premiere.3.br" tvg-name="Premiere 3 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 3 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38409.m3u8
-
-#EXTINF:-1 tvg-id="premiere.4.br" tvg-name="Premiere 4 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 4 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38408.m3u8
-
-#EXTINF:-1 tvg-id="premiere.5.br" tvg-name="Premiere 5 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 5 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38407.m3u8
-
-#EXTINF:-1 tvg-id="premiere.6.br" tvg-name="Premiere 6 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 6 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38406.m3u8
-
-#EXTINF:-1 tvg-id="premiere.7.br" tvg-name="Premiere 7 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 7 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38405.m3u8
-
-#EXTINF:-1 tvg-id="Premiere 8 FHD" tvg-name="Premiere 8 FHD" tvg-logo="https://i.imgur.com/0hDut9Q.png" group-title="Canais | Premiere",Premiere 8 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/931355.m3u8
-
-#EXTINF:-1 tvg-id="bandsports.br" tvg-name="BandSports FHD" tvg-logo="https://i.imgur.com/EjpU9TY.png" group-title="Canais | Esportes",BandSports FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/42900.m3u8
-
-#EXTINF:-1 tvg-id="espn.br" tvg-name="ESPN FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38413.m3u8
-
-#EXTINF:-1 tvg-id="a.e.br" tvg-name="ESPN 2 FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN 2 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38401.m3u8
-
-#EXTINF:-1 tvg-id="a.e.br" tvg-name="ESPN 3 FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN 3 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/41477.m3u8
-
-#EXTINF:-1 tvg-id="a.e.br" tvg-name="ESPN 4 FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN 4 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/63306.m3u8
-
-#EXTINF:-1 tvg-id="fox.sports.2.br" tvg-name="ESPN 5 FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN 5 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/38398.m3u8
-
-#EXTINF:-1 tvg-id="ESPN Extra FHD" tvg-name="ESPN 6 FHD" tvg-logo="https://i.imgur.com/yOgmmCy.png" group-title="Canais | ESPN",ESPN 6 FHD
-http://play.biturl.vip/live/emanugordo/ylqgus2p2wc/129624.m3u8
-
-# Cole novos canais aqui...
-`;
-
-// ====== PARSE M3U ======
-function parseM3U(m3uText) {
-  const lines = m3uText.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-  const canais = []; let lastInfo = null;
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    if (line.startsWith("#EXTINF:")) {
-      lastInfo = line;
-    } else if (lastInfo && !line.startsWith("#")) {
-      const logo = (lastInfo.match(/tvg-logo="([^"]+)"/i)||[])[1]||"";
-      const group = (lastInfo.match(/group-title="([^"]+)"/i)||[])[1]||"Outros";
-      const name = (lastInfo.match(/tvg-name="([^"]+)"/i)||[])[1] || (lastInfo.match(/,(.*)$/)||[])[1] || "Canal";
-      canais.push({ name, logo, group, url: line });
-      lastInfo = null;
-    }
-  }
-  return canais;
-}
-
-const canais = parseM3U(canaisM3U);
-
-// ====== STATE ======
-const $ = s => document.querySelector(s);
-const groupsEl = $('#groups');
-const drawer = $('#drawer');
-const toggleDrawerBtn = $('#toggleDrawer');
-const btnOpenDrawer = $('#btnOpenDrawer');
-const searchBox = $('#q');
-const countEl = $('#count');
-const labelCurrent = $('#labelCurrent');
-const video = document.getElementById('video');
-const volume = document.getElementById('volume');
-const btnReload = document.getElementById('btnReload');
-const btnFs = document.getElementById('btnFs');
-
-let hls = null; let idxAtual = 0; let filtered = canais.slice();
-
-function agrupaPorGrupo(lista){
-  const grupos = {};
-  lista.forEach(c=>{ if(!grupos[c.group]) grupos[c.group]=[]; grupos[c.group].push(c); });
-  return grupos;
-}
-
-function render(lista){
-  const grupos = agrupaPorGrupo(lista);
-  groupsEl.innerHTML = '';
-  const total = lista.length; countEl.textContent = `${total} canais`;
-  Object.entries(grupos).forEach(([group, list])=>{
-    const det = document.createElement('details');
-    det.className = 'group';
-    if (list.some(c=> canais.indexOf(c) === idxAtual)) det.open = true;
-
-    const sum = document.createElement('summary');
-    sum.innerHTML = `<span class="group-title">${group}</span><span style="color:var(--muted);">${list.length}</span>`;
-    det.appendChild(sum);
-
-    const grid = document.createElement('div');
-    grid.className = 'canal-list';
-
-    list.forEach((c)=>{
-      const idx = canais.indexOf(c);
-      const btn = document.createElement('button');
-      btn.className = 'canal-btn' + (idx===idxAtual? ' selected':'');
-      btn.innerHTML = `
-        <img class="logo" src="${c.logo}" alt="${c.name}">
-        <div style="display:flex; flex-direction:column; min-width:0;">
-          <span class="name">${c.name}</span>
-          <span class="sub">${c.group}</span>
-        </div>`;
-      btn.onclick = ()=>{ playChannel(idx); closeDrawer(); };
-      grid.appendChild(btn);
-    });
-
-    det.appendChild(grid);
-    groupsEl.appendChild(det);
-  });
-}
-
-function playChannel(idx){
-  if (!canais[idx]) return;
-  idxAtual = idx; const c = canais[idx];
-  labelCurrent.textContent = c.name; labelCurrent.hidden = false;
-  if (hls) { try{ hls.destroy(); }catch(e){} hls = null; }
-  if (Hls.isSupported()){
-    hls = new Hls({
-      enableWorker:true, lowLatencyMode:true, backBufferLength:60,
-    });
-    hls.on(Hls.Events.ERROR, (evt, data)=>{
-      if (data && data.fatal){ console.error('HLS fatal', data); }
-    });
-    hls.loadSource(c.url);
-    hls.attachMedia(video);
-  } else if (video.canPlayType('application/vnd.apple.mpegurl')){
-    video.src = c.url; video.load();
-  } else {
-    alert('Seu navegador não suporta HLS (.m3u8).');
-  }
-  localStorage.setItem('gepa_last_chan', idx);
-  // refresh selection highlights
-  render(filtered);
-}
-
-// Volume cache
-const lastVolume = localStorage.getItem('gepa_vol');
-video.volume = volume.value = lastVolume!==null ? parseFloat(lastVolume) : 0.7;
-volume.oninput = e=>{ video.volume = e.target.value; localStorage.setItem('gepa_vol', video.volume); };
-
-// Fullscreen
-btnFs.onclick = ()=>{
-  const el = document.documentElement; // whole app
-  if (!document.fullscreenElement){ el.requestFullscreen?.(); }
-  else { document.exitFullscreen?.(); }
-};
-
-// Reload stream
-btnReload.onclick = ()=>{
-  const i = idxAtual; playChannel(i);
-};
-
-// Drawer control
-function openDrawer(){ drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
-function closeDrawer(){ drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
-
-toggleDrawerBtn.onclick = ()=>{
-  if (drawer.classList.contains('open')) closeDrawer(); else openDrawer();
-};
-btnOpenDrawer.onclick = openDrawer;
-
-drawer.addEventListener('click', (e)=>{
-  // close when tapping outside content top area on mobile
-  if (e.target === drawer) closeDrawer();
-});
-
-// Search filter
-searchBox.addEventListener('input', ()=>{
-  const q = searchBox.value.trim().toLowerCase();
-  if (!q){ filtered = canais.slice(); render(filtered); return; }
-  filtered = canais.filter(c=> (c.name+c.group).toLowerCase().includes(q));
-  render(filtered);
-});
-
-// Init
-render(canais);
-let idx = parseInt(localStorage.getItem('gepa_last_chan')||'0',10);
-if (Number.isNaN(idx) || idx<0 || idx>=canais.length) idx = 0;
-playChannel(idx);
-
-</script>
+  <!-- hls.js (para .m3u8 em navegadores sem HLS nativo) -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
+  <script src="./app.js" defer></script>
 </body>
 </html>
